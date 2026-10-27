@@ -1,0 +1,26 @@
+# Never commit data or outputs — code-only repository
+*.csv
+*.xlsx
+*.xls
+*.npz
+*.npy
+*.nii
+*.nii.gz
+*.dcm
+*.png
+*.jpg
+*.jpeg
+*.tif
+*.tiff
+*.pdf
+*.docx
+*.log
+*.json
+__pycache__/
+.DS_Store
+snapshot_*/
+_pre_correction_backup*/
+# local layout and fold membership never leave the machine
+paths_local.json
+nnunet_setup/splits_final.json
+nnunet_setup/case_manifest.csv
