@@ -107,4 +107,6 @@ training (default 3d_fullres configuration, single-channel post-contrast T1).
 
 ## Status
 
-Private during peer review. Public release with a Zenodo DOI at acceptance.
+Accepted for publication in European Journal of Radiology on 3 November 2026
+(https://doi.org/10.1016/j.ejrad.2026.113340). Repository public since 5 November 2026;
+the v1.0 release will be archived on Zenodo with a DOI.
