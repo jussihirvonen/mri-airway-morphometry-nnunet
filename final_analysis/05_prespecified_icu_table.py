@@ -10,7 +10,7 @@ Features were locked on physiological grounds (see airway_paper_outline.md):
   5. Length below 50 mm²  -- length over which caliber is critically narrowed
 
 Cohort restriction: abs_positive == 1 (n=223). Matches the established
-Turku ICU model's scope. No-ICU vs ICU groups compared by Mann-Whitney U;
+published ICU model's scope. No-ICU vs ICU groups compared by Mann-Whitney U;
 effect size = rank-biserial correlation.
 """
 

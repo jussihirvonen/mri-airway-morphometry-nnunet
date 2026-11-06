@@ -4,7 +4,7 @@ Does the DL-predicted morphometry reproduce Paper 1's ICU-association findings?
 
 For each of the 5 pre-specified airway features, redo the Paper 1 univariate
 ICU comparison (Mann-Whitney U, rank-biserial r, single-feature AUC) and the
-incremental ICU model (Turku ref + 4 airway features), but substitute the
+incremental ICU model (Reference model + 4 airway features), but substitute the
 DL-PREDICTED feature values for the manual ones. Compare side-by-side.
 
 Output:
@@ -159,18 +159,18 @@ def main():
         y = sub_df["icu_binary"].values.astype(int)
         n = len(y); n_icu = int(y.sum())
 
-        # M1: Turku ref alone (same for both)
+        # M1: Reference model alone (same for both)
         X_ref = sub_df[REF].values
         probs_ref = fit_logistic_get_probs(X_ref, y)
         auc_ref, lo_ref, hi_ref = auc_ci_delong(y, probs_ref)
 
-        # M2-manual: Turku + manual 4 airway
+        # M2-manual: Reference + manual 4 airway
         X_man = sub_df[REF + [f"manual_{f}" for f in AIRWAY4]].values
         probs_man = fit_logistic_get_probs(X_man, y)
         auc_man, lo_man, hi_man = auc_ci_delong(y, probs_man)
         _, _, z_man, p_man = delong_p_two_models(y, probs_man, probs_ref)
 
-        # M2-predicted: Turku + DL-predicted 4 airway
+        # M2-predicted: Reference + DL-predicted 4 airway
         X_pred = sub_df[REF + [f"pred_{f}" for f in AIRWAY4]].values
         probs_pred = fit_logistic_get_probs(X_pred, y)
         auc_pred, lo_pred, hi_pred = auc_ci_delong(y, probs_pred)
@@ -180,10 +180,10 @@ def main():
         _, _, z_mp, p_mp = delong_p_two_models(y, probs_man, probs_pred)
 
         for name, auc, lo, hi, d, z, p in [
-            ("Turku ref",                                          auc_ref, lo_ref, hi_ref, 0.0, np.nan, np.nan),
-            ("Turku + 4 MANUAL airway features",                   auc_man, lo_man, hi_man,
+            ("Reference model",                                          auc_ref, lo_ref, hi_ref, 0.0, np.nan, np.nan),
+            ("Reference + 4 MANUAL airway features",                   auc_man, lo_man, hi_man,
              auc_man - auc_ref, z_man, p_man),
-            ("Turku + 4 DL-PREDICTED airway features",             auc_pred, lo_pred, hi_pred,
+            ("Reference + 4 DL-PREDICTED airway features",             auc_pred, lo_pred, hi_pred,
              auc_pred - auc_ref, z_pred, p_pred),
         ]:
             inc_rows.append(dict(cohort=cohort_label, n=n, ICU=n_icu, model=name,
@@ -231,7 +231,7 @@ def main():
                              f"{r.p_vs_ref:>8.3f}\n")
                 else:
                     auc_str = f"{r.AUC:.3f} ({r.AUC_lo:.3f}-{r.AUC_hi:.3f})"
-                    if r.model == "Turku ref":
+                    if r.model == "Reference model":
                         fp.write(f"  {r.model:<48s} {auc_str:>14s} {'(ref)':>8s}\n")
                     else:
                         fp.write(f"  {r.model:<48s} {auc_str:>14s} "
@@ -242,7 +242,7 @@ def main():
         fp.write("  - Univariate: if 'predicted' p-values and direction match 'manual' for\n")
         fp.write("    the four ICU-associated features, the DL pipeline preserves Paper 1's\n")
         fp.write("    univariate effect, even with imperfect ICC.\n")
-        fp.write("  - Incremental: if 'Turku + 4 PREDICTED airway' AUC ≈ 'Turku + 4 MANUAL',\n")
+        fp.write("  - Incremental: if 'Reference + 4 PREDICTED airway' AUC ≈ 'Reference + 4 MANUAL',\n")
         fp.write("    and the head-to-head DeLong p > 0.05, the two pipelines are\n")
         fp.write("    statistically indistinguishable for ICU prediction.\n")
 

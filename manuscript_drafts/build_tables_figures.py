@@ -58,7 +58,7 @@ MERGED = pd.read_csv(FA / "airway_morphology_merged.csv")
 # rather than the volumetric derivation rpe_present (NA for the 23 cases without
 # a volumetric RPE segmentation; 8 of them RPE-positive). The two agree
 # perfectly where both are defined. This drives Table 1 (RPE count) and Table 4
-# (reference Turku ICU model complete-case n: 297 -> 320).
+# (published reference ICU model complete-case n: 297 -> 320).
 assert MERGED["retroinf"].notna().all(), "retroinf must be complete"
 MERGED["rpe_present"] = MERGED["retroinf"]
 PANEL = pd.read_csv(FA / "08_severity_compare_combined.csv")
@@ -373,7 +373,7 @@ def build_table3():
 def build_table4():
     feats_airway4 = ["min_area_mm2", "compactness", "rl_dev_max_abs_mm", "len_below_50mm2_mm"]
     models = {
-        "Reference (Turku ICU-risk model)":     ["crp", "rpe_present", "abs_diamax_mri"],
+        "Reference (published ICU-risk model)":     ["crp", "rpe_present", "abs_diamax_mri"],
         "Reference + minimum CSA":              ["crp", "rpe_present", "abs_diamax_mri",
                                                  "min_area_mm2"],
         "Reference + four airway features":     ["crp", "rpe_present", "abs_diamax_mri",
@@ -391,14 +391,14 @@ def build_table4():
         # subgroup header row
         rows.append([f"{cohort_label} (n = {n_total}, ICU = {n_icu})", "", "", "", ""])
         # Fit ref first
-        ref_probs = fit_logistic_get_probs(df_sub[models["Reference (Turku ICU-risk model)"]].values, y)
+        ref_probs = fit_logistic_get_probs(df_sub[models["Reference (published ICU-risk model)"]].values, y)
         ref_auc, ref_lo, ref_hi = auc_ci_delong(y, ref_probs)
         rows.append([list(models.keys())[0],
                      f"{ref_auc:.3f} ({ref_lo:.3f}–{ref_hi:.3f})",
                      "—", "—", "(reference)"])
         indent_rows.append(len(rows) - 1)
         csv_rows.append({"cohort": cohort_label, "n": n_total, "ICU_events": n_icu,
-                         "model": "Reference (Turku ICU-risk model)",
+                         "model": "Reference (published ICU-risk model)",
                          "AUC": ref_auc, "CI_lo": ref_lo, "CI_hi": ref_hi,
                          "delta_vs_ref": 0.0, "DeLong_z": float("nan"),
                          "p_vs_ref": float("nan")})
@@ -426,10 +426,10 @@ def build_table4():
                bold_rows={r for r in range(len(rows)) if r not in indent_rows})
     caption(doc,
         "Standard logistic-regression models on standardized features; AUC 95% confidence "
-        "intervals by DeLong's method. ΔAUC compared with the reference Turku ICU-risk model "
+        "intervals by DeLong's method. ΔAUC compared with the published ICU-risk model "
         "(C-reactive protein + retropharyngeal-edema presence + maximum abscess diameter); "
         "between-model comparisons by DeLong's test for correlated AUCs. The reference model "
-        "and the abscess-positive sensitivity reference use the established Turku model "
+        "and the abscess-positive sensitivity reference use the established published model "
         "definition with maximum abscess diameter set to zero in abscess-negative patients. "
         "Minimum CSA, minimum airway cross-sectional area. Four airway features: minimum CSA, "
         "compactness, maxMLS, LCSA50.")

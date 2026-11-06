@@ -187,7 +187,7 @@ columns appears in the manuscript. Rename before the public repo flip.
 Manuscript build (tracked changes applied to the SUBMITTED file, originals untouched):
 `manuscript_drafts/trackchanges.py` (w:ins/w:del engine) + `manuscript_drafts/build_revised_manuscript.py` →
 the revision folder: `ILM_maindocument_R1_TRACKED_09102026_JHi.docx`, `..._CLEAN_...docx`, `ILM_highlights_R1_09102026_JHi.docx`.
-Reference changes: Lin 2026 (old 24) and Tuna 2025 (old 36) removed; Avrahami 1996 (old 34) REPLACED by Avrahami & Englender 1995 AJNR 16:135–140 (PMID 7900582; the paper that reports the <50 mm² finding); added 35 Viertonen EurRadiol 2026, 36 Viertonen EJR 2026, 37 Benjamini-Hochberg 1995, 38 Heinze & Schemper 2002, 39 Harrell 1996, 40 Demler 2012. In-text citations renumbered programmatically (8 hyperlinks changed).
+Reference changes: Lin 2026 (old 24) and Tuna 2025 (old 36) removed; Avrahami 1996 (old 34) retained (the swap to Avrahami & Englender 1995, AJNR 16:135–140, is applied only with STRICT = False, see 6c); added 35 Viertonen EurRadiol 2026, 36 Viertonen EJR 2026, 37 Benjamini-Hochberg 1995, 38 Heinze & Schemper 2002, 39 Harrell 1996, 40 Demler 2012. In-text citations renumbered programmatically (8 hyperlinks changed).
 
 ### 6c. Scope rule (senior author, 9 Oct 2026)
 The revision contains only edits that answer a specific reviewer request. The three builders carry a
@@ -237,3 +237,6 @@ The exploratory median split of compactness within large abscesses (Results para
 - References renumbered to strict order of first appearance (the overlap sentence in the Methods cited the two new cohort papers before entries 31 to 34 first appeared). Applied post hoc to the package copies with `manuscript_drafts/renumber_references.py` (not in this repository; it rewrites citations inside the existing runs so the senior author's manual superscript edits are preserved). Mapping old to new: 35 to 31, 36 to 32, 31 to 33, 32 to 34, 33 to 35, 37 to 36, 38 to 37, 39 to 38, 40 to 39, 34 to 40. Verified: 40 entries consecutive, all cited, first appearance 1 to 40 in order, entry texts unchanged, tracked baseline unchanged.
 - Table 4 footnote shortened from 181 to 136 words in `build_revision_tables.py` (same content: Firth/logistf, DeLong CI, 500-resample optimism correction, refitted reference model, penalized LR test vs DeLong, abbreviations, selection-aware note with the fixed-model values).
 - Abstract Conclusion split into two sentences (senior author); abstract 249 words.
+
+### 6i. 6 Nov 2026, public-release audit
+Full tree and history re-scanned for people, hosts, paths, identifiers and secrets. Institution name removed from code labels and comments (model labels now "Reference model" / "published ICU-risk model"; `build_revision_tables.py` matches the reference row by prefix so older CSVs still load), author comment in `analysis_pipeline.R` genericized, and the Avrahami note in 6b corrected (1996 citation retained). No study-specific names, case identifiers, server names or folder names remain; the README citation is the only place with author and institution names.

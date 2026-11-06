@@ -138,7 +138,7 @@ def table4():
         sub = f[f.cohort == coh]; dsub = d[d.cohort == dcoh]
         n = int(sub.n.iloc[0]); ev = int(sub.events.iloc[0])
         rows.append([f"{coh} (n = {n}, ICU = {ev})", "", "", "", "", "", ""] + ([] if STRICT else [""])); bold.append(len(rows) - 1)
-        ref = sub[sub.model == "Reference (Turku ICU-risk model)"].iloc[0]
+        ref = sub[sub.model.str.startswith("Reference (")].iloc[0]   # label-independent (CSV written by 32_penalized_icu_models.R)
         rows.append(["Reference model (CRP, RPE, abscess diameter; refitted)", f"{int(ref.k)} ({ref.EPV:.0f})", f"{ref.AUC_apparent:.3f} ({ref.CI_lo:.3f}–{ref.CI_hi:.3f})", f"{ref.AUC_corrected:.3f}"] + ([] if STRICT else [f"{ref.cal_slope_validated:.2f}"]) + ["—", "—", "—"]); ind.append(len(rows) - 1)
         for mname in ["Reference + minimum CSA", "Reference + four airway features"]:
             r = sub[sub.model == mname].iloc[0]; chi, df_, p, pdl = lrt[(coh, mname)]

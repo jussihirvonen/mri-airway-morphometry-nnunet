@@ -24,7 +24,7 @@ air4 <- c("min_area_mm2", "compactness", "rl_dev_max_abs_mm", "len_below_50mm2_m
 ref  <- c("crp", "rpe_present", "abs_diamax_mri")
 keep <- complete.cases(d[, c("icu_binary", ref, air4, "age", "sex")])
 d <- d[keep, ]
-models <- list("Reference (Turku ICU-risk model)" = ref,
+models <- list("Reference (published ICU-risk model)" = ref,
                "Reference + minimum CSA" = c(ref, "min_area_mm2"),
                "Reference + four airway features" = c(ref, air4),
                "Reference + age + sex" = c(ref, "age", "sex"),

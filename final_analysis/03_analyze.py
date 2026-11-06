@@ -402,27 +402,27 @@ def main():
             pr(f"  {f:32s} p={p:.4f}{sig:3s} r_rb={r_rb:+.3f}  noMedOed={m0:.1f}  medOed={m1:.1f}")
 
     # ─────────────────────────────────────────────────────────────
-    # 12. Incremental ICU model — FULL COHORT, Turku-matched reference
-    #     Turku reference = CRP + RPE(present) + max abscess diameter
+    # 12. Incremental ICU model — FULL COHORT, reference-model-matched reference
+    #     Reference model = CRP + RPE(present) + max abscess diameter
     #     (absdiamax = 0 in abscess-negative patients, per Heikkinen model)
     #     Airway block = pre-specified features (min CSA, compactness,
     #     max midline shift, length<50 mm²)
     # ─────────────────────────────────────────────────────────────
     pr("\n" + "─" * 75)
-    pr("12. INCREMENTAL ICU MODEL — FULL COHORT (Turku-matched, n up to 323)")
+    pr("12. INCREMENTAL ICU MODEL — FULL COHORT (reference-model-matched, n up to 323)")
     pr("─" * 75)
-    turku = ['crp', 'rpe_present', 'abs_diamax_mri']
+    ref_model = ['crp', 'rpe_present', 'abs_diamax_mri']
     airway_ps = ['min_area_mm2', 'compactness', 'rl_dev_max_abs_mm', 'len_below_50mm2_mm']
-    needed = turku + airway_ps + ['icu_binary']
+    needed = ref_model + airway_ps + ['icu_binary']
     fc = df[needed].dropna().reset_index(drop=True)
     y_fc = fc['icu_binary'].values.astype(int)
     pr(f"  complete-case n={len(fc)}  ICU+={int(y_fc.sum())}")
 
     model_probs = {}
     for fs, lab in [
-        (turku, 'Turku ref (CRP+RPE+absdiamax)'),
-        (turku + ['min_area_mm2'], 'Turku + min CSA'),
-        (turku + airway_ps, 'Turku + airway (pre-specified 4)'),
+        (ref_model, 'Reference model (CRP+RPE+absdiamax)'),
+        (ref_model + ['min_area_mm2'], 'Reference + min CSA'),
+        (ref_model + airway_ps, 'Reference + airway (pre-specified 4)'),
         (airway_ps, 'Airway pre-specified alone'),
     ]:
         X = fc[fs].values
@@ -430,7 +430,7 @@ def main():
         model_probs[lab] = probs
         pr(f"  {lab:38s} AUC={auc:.3f}")
 
-    # Paired bootstrap ΔAUC: Turku+airway vs Turku ref (on fixed LOO probs)
+    # Paired bootstrap ΔAUC: Reference+airway vs Reference model (on fixed LOO probs)
     def boot_delta(probs_a, probs_b, y, n_boot=2000, seed=42):
         rng = np.random.default_rng(seed)
         n = len(y)
@@ -447,10 +447,10 @@ def main():
         p_two = 2 * min((deltas <= 0).mean(), (deltas >= 0).mean())
         return base, lo, hi, p_two
 
-    ref = model_probs['Turku ref (CRP+RPE+absdiamax)']
-    for lab in ['Turku + min CSA', 'Turku + airway (pre-specified 4)']:
+    ref = model_probs['Reference model (CRP+RPE+absdiamax)']
+    for lab in ['Reference + min CSA', 'Reference + airway (pre-specified 4)']:
         d, lo, hi, pv = boot_delta(model_probs[lab], ref, y_fc)
-        pr(f"  ΔAUC {lab} vs Turku ref: {d:+.3f}  95% CI [{lo:+.3f}, {hi:+.3f}]  p={pv:.3f}")
+        pr(f"  ΔAUC {lab} vs Reference model: {d:+.3f}  95% CI [{lo:+.3f}, {hi:+.3f}]  p={pv:.3f}")
 
     with open(RPT, 'w') as fp:
         fp.write('\n'.join(OUT))

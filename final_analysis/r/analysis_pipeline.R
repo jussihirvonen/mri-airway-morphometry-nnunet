@@ -25,7 +25,7 @@
 #   cd final_analysis/r/
 #   Rscript analysis_pipeline.R
 #
-# Authors: Hirvonen J, Viertonen V (analyses).
+# Authors: see the README citation.
 # Date: 2026-06
 # ===========================================================================
 
@@ -58,7 +58,7 @@ ir <- read.csv(file.path(data_dir, "inter_rater_n20.csv"),
 # complete binary flag `retroinf` is 0/1 for all 322 patients and agrees
 # perfectly with rpe_present where both are defined (144/144 neg, 155/155 pos).
 # Overwriting here propagates the complete variable to the descriptive count,
-# the reference Turku ICU model, the convergent-validity panel, and the
+# the published reference ICU model, the convergent-validity panel, and the
 # abscess-negative robustness check. rpe_volume_ml is left untouched (the
 # volume is only defined in the 299 volumetrically segmented cases).
 stopifnot(!any(is.na(df$retroinf)))
@@ -202,9 +202,9 @@ run_incremental_block <- function(d, cohort_label) {
   cat(sprintf("\n  %s (n=%d, ICU=%d)\n", cohort_label, n, n_icu))
 
   models <- list(
-    "Turku ref"               = c("crp", "rpe_present", "abs_diamax_mri"),
-    "Turku + min CSA"         = c("crp", "rpe_present", "abs_diamax_mri", "min_area_mm2"),
-    "Turku + 4 airway features" = c("crp", "rpe_present", "abs_diamax_mri",
+    "Reference model"               = c("crp", "rpe_present", "abs_diamax_mri"),
+    "Reference + min CSA"         = c("crp", "rpe_present", "abs_diamax_mri", "min_area_mm2"),
+    "Reference + 4 airway features" = c("crp", "rpe_present", "abs_diamax_mri",
                                      "min_area_mm2", "compactness",
                                      "rl_dev_max_abs_mm", "len_below_50mm2_mm")
   )
@@ -226,7 +226,7 @@ run_incremental_block <- function(d, cohort_label) {
   }
 
   cat(sprintf("  %-30s  %14s  %10s  %10s\n", "Model", "AUC (95% CI)", "ΔAUC", "DeLong p"))
-  ref <- "Turku ref"
+  ref <- "Reference model"
   for (m in names(models)) {
     auc_str <- sprintf("%.3f (%.3f–%.3f)", aucs[[m]], cis[[m]][1], cis[[m]][2])
     if (m == ref) {

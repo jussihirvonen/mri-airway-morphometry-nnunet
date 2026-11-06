@@ -7,7 +7,7 @@ restrictions, so the impact of including/excluding abs-negative DNI
 patients can be inspected directly.
 
   Full cohort  (n=323)   primary candidate: broader generalizability
-  abs+ only    (n=223)   matches established Turku ICU model scope
+  abs+ only    (n=223)   matches established published ICU model scope
   abs- only    (n=100)   stratified sensitivity; sparse for ICU & Mediast
 
 Axes that are undefined for a cohort are auto-skipped:
@@ -46,7 +46,7 @@ BINARY = [
 CONTINUOUS = [
     ("crp", "CRP"),
     # RPE volume dropped 2026-06-01 — redundant with binary rpe_present;
-    # keep abs_diam (Turku model component, continuous dose-response on abscess size).
+    # keep abs_diam (published model component, continuous dose-response on abscess size).
     ("abs_diamax_mri", "Abscess diam"),
 ]
 
